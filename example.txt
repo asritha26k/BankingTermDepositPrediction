@@ -1,0 +1,17 @@
+eg_to_use={
+  "age": 35,
+  "job": "management",
+  "marital": "married",
+  "education": "university.degree",
+  "default": "yes",
+  "housing": "yes",
+  "loan": "no",
+  "contact": "cellular",
+  "month": "may",
+  "day_of_week": "mon",
+  "duration": 120,
+  "campaign": 2,
+  "pdays": 999,
+  "previous": 0,
+  "poutcome": "success"
+}
