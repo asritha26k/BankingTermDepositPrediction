@@ -1,0 +1,55 @@
+# Python specific ignored files
+
+
+venv/
+!venv/.gitignore
+
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+.Python
+env/
+venv/  # Your virtual environment folder
+pip-log.txt
+pip-delete-this-file.txt
+.tox/
+.coverage
+.pytest_cache/
+*.egg-info/
+.installed.cfg
+*.manifest
+*.spec
+
+# Operating System generated files
+.DS_Store      # macOS
+Thumbs.db      # Windows
+ehthumbs.db    # Windows
+Desktop.ini    # Windows
+
+# Editor/IDE specific files
+.vscode/       # VS Code configuration files (if any are local)
+.idea/         # PyCharm/IntelliJ IDEA configuration files
+*.swp
+*~
+*.bak
+
+# Project-specific generated directories and files
+uploads/       # Directory where uploaded CSVs are temporarily stored
+results/       # Directory where prediction results CSVs are saved
+celery_results/ # Directory for Celery's filesystem backend (even if not primary now, good to ignore)
+*.log          # Any log files (e.g., from Uvicorn, Celery)
+
+# Environment variables file (CRITICAL: NEVER commit this!)
+.env
+
+# Machine Learning Models (Sensitive/Large Files)
+# Generally, you should NOT commit large trained models (.pkl files) directly to Git.
+# They can be large, change frequently, and should ideally be regenerated from code
+# or stored in a dedicated model registry.
+# If your 'full_pipeline.pkl' is relatively small and you prefer to version it
+# alongside your code for simplicity, you can COMMENT OUT the line below.
+# However, for best practice, keep it UNCOMMENTED (ignored).
+model/*.pkl
+
+newFunctionalities.txt

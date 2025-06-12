@@ -1,0 +1,6 @@
+age,job,marital,education,default,balance,housing,loan,contact,day,month,duration,campaign,pdays,previous,poutcome,predicted_term_deposit,prediction_probability
+35,management,married,university.degree,no,1200,yes,no,cellular,5,may,120,2,999,0,nonexistent,no,0.06502598152111028
+42,technician,married,high.school,no,50,yes,no,cellular,10,aug,200,1,999,0,nonexistent,no,0.07909968148726575
+28,student,single,university.degree,no,800,no,no,cellular,20,jul,300,3,999,0,nonexistent,no,0.3106725075098877
+55,retired,married,basic.4y,no,3000,no,yes,telephone,1,nov,400,1,999,0,nonexistent,no,0.21279892650187415
+30,services,single,high.school,no,100,yes,no,cellular,15,apr,150,2,999,0,nonexistent,no,0.1480214705285902

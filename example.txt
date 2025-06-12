@@ -1,17 +1,95 @@
-eg_to_use={
+example to test -> {
   "age": 35,
   "job": "management",
   "marital": "married",
   "education": "university.degree",
-  "default": "yes",
+  "default": "no",
+  "balance": 1200,
   "housing": "yes",
   "loan": "no",
   "contact": "cellular",
+  "day": 5,
   "month": "may",
-  "day_of_week": "mon",
   "duration": 120,
   "campaign": 2,
   "pdays": 999,
   "previous": 0,
-  "poutcome": "success"
+  "poutcome": "nonexistent"
 }
+
+celery -A celery_worker.celery_app worker --loglevel=info --pool=solo
+
+#for concurrent requests we use
+
+celery -A celery_worker.celery_app worker --loglevel=info --pool=threads
+
+#code used to train:
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.linear_model import LogisticRegression
+import joblib
+import os
+
+# Ensure output directory exists
+os.makedirs('/kaggle/working/model', exist_ok=True)
+
+# Load dataset
+data = pd.read_csv('/kaggle/input/bank-marketing-data/your_bank_marketing_data.csv')
+
+# Drop ID and separate target
+X = data.drop(['Id', 'y'], axis=1)
+y = data['y']
+
+# Feature definitions
+numerical_features = ['age', 'balance', 'day', 'duration', 'campaign', 'pdays', 'previous']
+categorical_features = ['job', 'marital', 'education', 'default', 'housing', 'loan',
+                        'contact', 'month', 'poutcome']
+
+# Pipelines for preprocessing
+numeric_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', StandardScaler())
+])
+
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('encoder', OneHotEncoder(handle_unknown='ignore'))
+])
+
+# Combine all preprocessing
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numerical_features),
+        ('cat', categorical_transformer, categorical_features)
+    ],
+    remainder='passthrough'  # keep any other columns if present
+)
+
+# Full pipeline
+full_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', LogisticRegression(solver='liblinear', random_state=42))
+])
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit the model
+full_pipeline.fit(X_train, y_train)
+
+# Save pipeline and components
+joblib.dump(full_pipeline, '/kaggle/working/model/full_pipeline.pkl')
+print("✅ Full pipeline saved to /kaggle/working/model/full_pipeline.pkl")
+
+fitted_scaler = full_pipeline.named_steps['preprocessor'].named_transformers_['num'].named_steps['scaler']
+joblib.dump(fitted_scaler, '/kaggle/working/model/scaler.pkl')
+print("✅ Numerical scaler saved to /kaggle/working/model/scaler.pkl")
+
+fitted_model = full_pipeline.named_steps['classifier']
+joblib.dump(fitted_model, '/kaggle/working/model/logistic_model.pkl')
+print("✅ Logistic model saved to /kaggle/working/model/logistic_model.pkl")
